@@ -138,10 +138,34 @@ pub struct ConcreteAssociatedTypeSubject<T: AssociatedTypeObserver> {
     observers: Vec<T>,
 }
 
-impl<T: AssociatedTypeObserver + PartialEq> ConcreteAssociatedTypeObserver<T> {
+impl<T: AssociatedTypeObserver + PartialEq> ConcreteAssociatedTypeSubject<T> {
     pub fn new() -> Self {
         Self {
             observers: Vec::new(),
         }
+    }
+}
+
+impl<T: AssociatedTypeObserver + PartialEq> AssociatedTypeSubject for ConcreteAssociatedTypeSubject<T> {
+    type Observer = T;
+    type Notification = T::Notification;
+
+    fn add_listener(&mut self, observer: Self::Observer) {
+        self.observers.push(observer);
+    }
+
+    fn remove_listener(&mut self, observer: Self::Observer) {
+        if let Some(index) = self.observers.iter().position(|x| *x == observer) {
+            self.observers.remove(index);
+        }
+    }
+
+    fn notify_observers_borrow(&self, string: Option<&Self::Notification>) {
+        self.observers.iter()
+            .for_each(|x| {
+                if let Some(string) = string {
+                    x.on_notify_borrow(string);
+                }
+            });
     }
 }

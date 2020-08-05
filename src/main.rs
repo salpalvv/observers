@@ -68,4 +68,15 @@ fn main() {
     entity_subject.remove_listener(entity_o_b);
     entity_subject.add_listener(entity_o_b);
     entity_subject.notify_observers(&mut entity, 20);
+
+    let notification = String::from("wow");
+    let mut associated_type_subject = ConcreteAssociatedTypeSubject::new();
+    let associated_type_observer_a = ConcreteAssociatedTypeObserverEnum::CATO(ConcreteAssociatedTypeObserver{});
+    let associated_type_observer_b = ConcreteAssociatedTypeObserverEnum::ACATO(AnotherConcreteAssociatedTypeObserver{});
+
+    associated_type_subject.add_listener(associated_type_observer_a);
+    associated_type_subject.add_listener(associated_type_observer_b);
+    associated_type_subject.remove_listener(associated_type_observer_b);
+    associated_type_subject.add_listener(associated_type_observer_b);
+    associated_type_subject.notify_observers_borrow(Some(&notification));
 }

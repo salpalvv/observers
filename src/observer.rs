@@ -97,6 +97,7 @@ impl EntityObserver for ConcreteEntityObserverEnum {
     }
 }
 
+#[derive(PartialEq, Clone, Copy)]
 pub struct ConcreteAssociatedTypeObserver{}
 
 impl AssociatedTypeObserver for ConcreteAssociatedTypeObserver {
@@ -104,8 +105,12 @@ impl AssociatedTypeObserver for ConcreteAssociatedTypeObserver {
     fn on_notify(&mut self, string: &mut Self::Notification) {
         println!("CATO {}", string);
     }
+    fn on_notify_borrow(&self, string: &Self::Notification) {
+        println!("CATO {}", string);
+    }
 }
 
+#[derive(PartialEq, Clone, Copy)]
 pub struct AnotherConcreteAssociatedTypeObserver{}
 
 impl AssociatedTypeObserver for AnotherConcreteAssociatedTypeObserver {
@@ -113,8 +118,12 @@ impl AssociatedTypeObserver for AnotherConcreteAssociatedTypeObserver {
     fn on_notify(&mut self, string: &mut Self::Notification) {
         println!("ACATO {}", string);
     }
+    fn on_notify_borrow(&self, string: &Self::Notification) {
+        println!("ACATO {}", string);
+    }
 }
 
+#[derive(PartialEq, Clone, Copy)]
 pub enum ConcreteAssociatedTypeObserverEnum{
     CATO(ConcreteAssociatedTypeObserver),
     ACATO(AnotherConcreteAssociatedTypeObserver),
@@ -129,6 +138,17 @@ impl AssociatedTypeObserver for ConcreteAssociatedTypeObserverEnum {
             },
             ConcreteAssociatedTypeObserverEnum::ACATO(observer) => {
                 observer.on_notify(string)
+            },
+        }
+    }
+
+    fn on_notify_borrow(&self, string: &Self::Notification) {
+        match self {
+            ConcreteAssociatedTypeObserverEnum::CATO(observer) => {
+                observer.on_notify_borrow(string)
+            },
+            ConcreteAssociatedTypeObserverEnum::ACATO(observer) => {
+                observer.on_notify_borrow(string)
             },
         }
     }
