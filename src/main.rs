@@ -71,18 +71,34 @@ fn main() {
     entity_subject.add_listener(entity_o_b);
     entity_subject.notify_observers(&mut entity, 20);
 
-    let notification = 1;
+    let notification = Notification{ radius: String::from("DO IT!") };
     let mut associated_type_subject = ConcreteAssociatedTypeSubject::new();
-    let c_a_t_o: ConcreteAssociatedTypeObserver<i32> = ConcreteAssociatedTypeObserver::new();
-    let a_c_a_t_o: AnotherConcreteAssociatedTypeObserver<i32> = AnotherConcreteAssociatedTypeObserver::new();
+    let c_a_t_o: ConcreteAssociatedTypeObserver<Notification> = ConcreteAssociatedTypeObserver::new();
+    let a_c_a_t_o: AnotherConcreteAssociatedTypeObserver<Notification> = AnotherConcreteAssociatedTypeObserver::new();
     let associated_type_observer_a = ConcreteAssociatedTypeObserverEnum::CATO(c_a_t_o);
     let associated_type_observer_b = ConcreteAssociatedTypeObserverEnum::ACATO(a_c_a_t_o);
 
     associated_type_subject.add_listener(associated_type_observer_a);
     associated_type_subject.add_listener(associated_type_observer_b);
-    // this works because notification (i32) implements the Copy type
-    // otherwise it doesn't like the move
-    associated_type_subject.remove_listener(associated_type_observer_b);
-    associated_type_subject.add_listener(associated_type_observer_b);
+    // you aren't able to remove because the observers Vec moved the observers_b already so you can't use it anymore.
+    //associated_type_subject.remove_listener(associated_type_observer_b);
+    //associated_type_subject.add_listener(associated_type_observer_b);
     associated_type_subject.notify_observers_borrow(Some(&notification));
+}
+
+#[derive(Debug)]
+pub struct Entity{ 
+    pub radius: i32
+}
+
+#[derive(Debug, PartialEq)]
+pub struct Notification{ 
+    pub radius: String,
+}
+
+impl std::fmt::Display for Notification {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Notification {{ radius: {} }}", self.radius)
+    }
+
 }

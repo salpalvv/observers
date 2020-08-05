@@ -1,5 +1,6 @@
 use crate::observer::*;
 use crate::traits::*;
+use crate::*;
 
 pub struct ConcreteSubject<'a, T: Observer> {
     observers: Vec<&'a mut T>,
@@ -134,7 +135,7 @@ impl<T: EntityObserver + PartialEq> EntitySubject<T> for ConcreteEntitySubject<T
 
 }
 
-pub struct ConcreteAssociatedTypeSubject<T: AssociatedTypeObserver> {
+pub struct ConcreteAssociatedTypeSubject<T: AssociatedTypeObserver + PartialEq> {
     observers: Vec<T>,
 }
 

@@ -1,6 +1,7 @@
 use std::marker::PhantomData;
 
 use crate::traits::*;
+use crate::*;
 
 #[derive(PartialEq, Clone, Copy)]
 pub struct ConcreteObserver {
@@ -71,12 +72,6 @@ impl EntityObserver for AnotherConcreteEntityObserver {
     fn on_notify(&self, entity: &mut Entity, radius: i32) {
         println!("{:?} has radius {:?}", entity, radius);
     }
-
-}
-
-#[derive(Debug)]
-pub struct Entity{ 
-    pub radius: i32
 }
 
 #[derive(PartialEq, Clone, Copy)]
