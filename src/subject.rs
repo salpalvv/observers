@@ -170,3 +170,39 @@ impl<T: AssociatedTypeObserver + PartialEq> AssociatedTypeSubject for ConcreteAs
             });
     }
 }
+
+pub struct CATReferenceSubject<'a, T: AssociatedTypeObserver + PartialEq> {
+    observers: Vec<&'a T>,
+}
+
+impl<'a, T: AssociatedTypeObserver + PartialEq> CATReferenceSubject<'a, T> {
+    pub fn new() -> Self {
+        Self {
+            observers: Vec::new(),
+        }
+    }
+}
+
+impl<'a, T: AssociatedTypeObserver + PartialEq> AssociatedTypeSubject for CATReferenceSubject<'a, T> {
+    type Observer = &'a T;
+    type Notification = T::Notification;
+
+    fn add_listener(&mut self, observer: Self::Observer) {
+        self.observers.push(observer);
+    }
+
+    fn remove_listener(&mut self, observer: Self::Observer) {
+        if let Some(index) = self.observers.iter().position(|x| *x == observer) {
+            self.observers.remove(index);
+        }
+    }
+
+    fn notify_observers_borrow(&self, notification: Option<&Self::Notification>) {
+        self.observers.iter()
+            .for_each(|x| {
+                if let Some(notification) = notification {
+                    x.on_notify_borrow(notification);
+                }
+            });
+    }
+}

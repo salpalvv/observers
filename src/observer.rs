@@ -94,7 +94,7 @@ impl EntityObserver for ConcreteEntityObserverEnum {
     }
 }
 
-#[derive(PartialEq, Clone, Copy)]
+#[derive(PartialEq)]
 pub struct ConcreteAssociatedTypeObserver<T: std::fmt::Display>{
     _fantum: PhantomData<T>,
 }
@@ -117,7 +117,7 @@ impl<T: std::fmt::Display> AssociatedTypeObserver for ConcreteAssociatedTypeObse
     }
 }
 
-#[derive(PartialEq, Clone, Copy)]
+#[derive(PartialEq)]
 pub struct AnotherConcreteAssociatedTypeObserver<T: std::fmt::Display>{
     _fantum: PhantomData<T>,
 }
@@ -140,7 +140,7 @@ impl<T: std::fmt::Display> AssociatedTypeObserver for AnotherConcreteAssociatedT
     }
 }
 
-#[derive(PartialEq, Clone, Copy)]
+#[derive(PartialEq)]
 pub enum ConcreteAssociatedTypeObserverEnum<T: std::fmt::Display>{
     CATO(ConcreteAssociatedTypeObserver<T>),
     ACATO(AnotherConcreteAssociatedTypeObserver<T>),

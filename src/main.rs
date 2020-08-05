@@ -84,6 +84,19 @@ fn main() {
     //associated_type_subject.remove_listener(associated_type_observer_b);
     //associated_type_subject.add_listener(associated_type_observer_b);
     associated_type_subject.notify_observers_borrow(Some(&notification));
+
+    // just shadowing the previous values to make copy paste faster
+    let mut associated_type_reference_subject = CATReferenceSubject::new();
+    let c_a_t_o: ConcreteAssociatedTypeObserver<Notification> = ConcreteAssociatedTypeObserver::new();
+    let a_c_a_t_o: AnotherConcreteAssociatedTypeObserver<Notification> = AnotherConcreteAssociatedTypeObserver::new();
+    let associated_type_observer_a = ConcreteAssociatedTypeObserverEnum::CATO(c_a_t_o);
+    let associated_type_observer_b = ConcreteAssociatedTypeObserverEnum::ACATO(a_c_a_t_o);
+    // taking references to the observer so i can add and remove 
+    associated_type_reference_subject.add_listener(&associated_type_observer_a);
+    associated_type_reference_subject.add_listener(&associated_type_observer_b);
+    associated_type_reference_subject.remove_listener(&associated_type_observer_b);
+    associated_type_reference_subject.add_listener(&associated_type_observer_b);
+    associated_type_reference_subject.notify_observers_borrow(Some(&notification));
 }
 
 #[derive(Debug)]

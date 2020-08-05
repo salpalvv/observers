@@ -42,6 +42,10 @@ pub trait EntitySubject<T: EntityObserver> {
     fn notify_observers(&self, entity: &mut Entity, radius: i32);
 }
 
+// Using associated types
+// Perhaps next, i'll need to add a trait to constrain the notification
+// this way, i can mutate it generically
+// that would be done in the actual implmentation though of each trait
 pub trait AssociatedTypeObserver {
     type Notification;
     fn on_notify(&mut self, _: &mut Self::Notification){}
@@ -57,5 +61,4 @@ pub trait AssociatedTypeSubject {
     fn notify_observers(&self, _: Option<&mut Self::Notification>){}
     fn notify_observers_mut(&mut self, _: Option<&mut Self::Notification>) {}
     fn notify_observers_borrow(&self, _: Option<&Self::Notification>){}
-    
 }
