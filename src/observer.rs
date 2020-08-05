@@ -1,3 +1,5 @@
+use std::marker::PhantomData;
+
 use crate::traits::*;
 
 #[derive(PartialEq, Clone, Copy)]
@@ -98,57 +100,77 @@ impl EntityObserver for ConcreteEntityObserverEnum {
 }
 
 #[derive(PartialEq, Clone, Copy)]
-pub struct ConcreteAssociatedTypeObserver{}
+pub struct ConcreteAssociatedTypeObserver<T: std::fmt::Display>{
+    _fantum: PhantomData<T>,
+}
 
-impl AssociatedTypeObserver for ConcreteAssociatedTypeObserver {
-    type Notification = String;
-    fn on_notify(&mut self, string: &mut Self::Notification) {
-        println!("CATO {}", string);
+impl<T: std::fmt::Display> ConcreteAssociatedTypeObserver<T> {
+    pub fn new() -> Self {
+        Self {
+            _fantum: PhantomData{}
+        }
     }
-    fn on_notify_borrow(&self, string: &Self::Notification) {
-        println!("CATO {}", string);
+}
+
+impl<T: std::fmt::Display> AssociatedTypeObserver for ConcreteAssociatedTypeObserver<T> {
+    type Notification = T;
+    fn on_notify(&mut self, notification: &mut Self::Notification) {
+        println!("CATO {}", notification);
+    }
+    fn on_notify_borrow(&self, notification: &Self::Notification) {
+        println!("CATO {}", notification);
     }
 }
 
 #[derive(PartialEq, Clone, Copy)]
-pub struct AnotherConcreteAssociatedTypeObserver{}
+pub struct AnotherConcreteAssociatedTypeObserver<T: std::fmt::Display>{
+    _fantum: PhantomData<T>,
+}
 
-impl AssociatedTypeObserver for AnotherConcreteAssociatedTypeObserver {
-    type Notification = String;
-    fn on_notify(&mut self, string: &mut Self::Notification) {
-        println!("ACATO {}", string);
+impl<T: std::fmt::Display> AnotherConcreteAssociatedTypeObserver<T> {
+    pub fn new() -> Self {
+        Self {
+            _fantum: PhantomData{}
+        }
     }
-    fn on_notify_borrow(&self, string: &Self::Notification) {
-        println!("ACATO {}", string);
+}
+
+impl<T: std::fmt::Display> AssociatedTypeObserver for AnotherConcreteAssociatedTypeObserver<T> {
+    type Notification = T;
+    fn on_notify(&mut self, notification: &mut Self::Notification) {
+        println!("ACATO {}", notification);
+    }
+    fn on_notify_borrow(&self, notification: &Self::Notification) {
+        println!("ACATO {}", notification);
     }
 }
 
 #[derive(PartialEq, Clone, Copy)]
-pub enum ConcreteAssociatedTypeObserverEnum{
-    CATO(ConcreteAssociatedTypeObserver),
-    ACATO(AnotherConcreteAssociatedTypeObserver),
+pub enum ConcreteAssociatedTypeObserverEnum<T: std::fmt::Display>{
+    CATO(ConcreteAssociatedTypeObserver<T>),
+    ACATO(AnotherConcreteAssociatedTypeObserver<T>),
 }
 
-impl AssociatedTypeObserver for ConcreteAssociatedTypeObserverEnum {
-    type Notification = String;
-    fn on_notify(&mut self, string: &mut Self::Notification) {
+impl<T: std::fmt::Display> AssociatedTypeObserver for ConcreteAssociatedTypeObserverEnum<T> {
+    type Notification = T;
+    fn on_notify(&mut self, notification: &mut Self::Notification) {
         match self {
             ConcreteAssociatedTypeObserverEnum::CATO(observer) => {
-                observer.on_notify(string)
+                observer.on_notify(notification)
             },
             ConcreteAssociatedTypeObserverEnum::ACATO(observer) => {
-                observer.on_notify(string)
+                observer.on_notify(notification)
             },
         }
     }
 
-    fn on_notify_borrow(&self, string: &Self::Notification) {
+    fn on_notify_borrow(&self, notification: &Self::Notification) {
         match self {
             ConcreteAssociatedTypeObserverEnum::CATO(observer) => {
-                observer.on_notify_borrow(string)
+                observer.on_notify_borrow(notification)
             },
             ConcreteAssociatedTypeObserverEnum::ACATO(observer) => {
-                observer.on_notify_borrow(string)
+                observer.on_notify_borrow(notification)
             },
         }
     }

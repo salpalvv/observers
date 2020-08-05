@@ -160,11 +160,11 @@ impl<T: AssociatedTypeObserver + PartialEq> AssociatedTypeSubject for ConcreteAs
         }
     }
 
-    fn notify_observers_borrow(&self, string: Option<&Self::Notification>) {
+    fn notify_observers_borrow(&self, notification: Option<&Self::Notification>) {
         self.observers.iter()
             .for_each(|x| {
-                if let Some(string) = string {
-                    x.on_notify_borrow(string);
+                if let Some(notification) = notification {
+                    x.on_notify_borrow(notification);
                 }
             });
     }

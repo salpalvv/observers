@@ -1,3 +1,5 @@
+use std::marker::PhantomData;
+
 mod observer;
 mod subject;
 mod traits;
@@ -69,13 +71,17 @@ fn main() {
     entity_subject.add_listener(entity_o_b);
     entity_subject.notify_observers(&mut entity, 20);
 
-    let notification = String::from("wow");
+    let notification = 1;
     let mut associated_type_subject = ConcreteAssociatedTypeSubject::new();
-    let associated_type_observer_a = ConcreteAssociatedTypeObserverEnum::CATO(ConcreteAssociatedTypeObserver{});
-    let associated_type_observer_b = ConcreteAssociatedTypeObserverEnum::ACATO(AnotherConcreteAssociatedTypeObserver{});
+    let c_a_t_o: ConcreteAssociatedTypeObserver<i32> = ConcreteAssociatedTypeObserver::new();
+    let a_c_a_t_o: AnotherConcreteAssociatedTypeObserver<i32> = AnotherConcreteAssociatedTypeObserver::new();
+    let associated_type_observer_a = ConcreteAssociatedTypeObserverEnum::CATO(c_a_t_o);
+    let associated_type_observer_b = ConcreteAssociatedTypeObserverEnum::ACATO(a_c_a_t_o);
 
     associated_type_subject.add_listener(associated_type_observer_a);
     associated_type_subject.add_listener(associated_type_observer_b);
+    // this works because notification (i32) implements the Copy type
+    // otherwise it doesn't like the move
     associated_type_subject.remove_listener(associated_type_observer_b);
     associated_type_subject.add_listener(associated_type_observer_b);
     associated_type_subject.notify_observers_borrow(Some(&notification));
